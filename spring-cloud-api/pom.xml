@@ -9,12 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>spring-cloud-auth</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>spring-cloud-auth-server</module>
-        <module>spring-cloud-auth-common</module>
-    </modules>
+    <artifactId>spring-cloud-api</artifactId>
 
 
 </project>
