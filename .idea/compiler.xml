@@ -6,7 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="spring-cloud-servers" />
+        <module name="spring-cloud-auth-server" />
+        <module name="spring-cloud-center" />
+        <module name="spring-cloud-gateway" />
       </profile>
     </annotationProcessing>
   </component>
