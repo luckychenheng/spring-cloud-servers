@@ -9,7 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableAutoConfiguration
-@EnableFeignClients
+@EnableFeignClients({"com.spring.cloud.gateway.feign"})
 public class SpringCloudGatewayApplication {
 
     public static void main(String[] args) {

@@ -28,4 +28,9 @@ public class AuthServiceImpl implements AuthService {
         //todo 查询数据库中用户信息
         return jwtTokenUtil.generateToken(new JWTInfo(authenticationRequest.getUsername(), 1L + "", "MR.WANG",expire));
     }
+
+    @Override
+    public String refresh(String oldToken) throws Exception {
+        return jwtTokenUtil.generateToken(jwtTokenUtil.getInfoFromToken(oldToken));
+    }
 }

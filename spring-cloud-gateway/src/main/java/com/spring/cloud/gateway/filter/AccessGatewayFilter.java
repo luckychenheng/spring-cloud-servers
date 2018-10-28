@@ -4,14 +4,17 @@ import com.spring.cloud.auth.client.EnableAceAuthClient;
 import com.spring.cloud.auth.client.config.UserAuthConfig;
 import com.spring.cloud.auth.client.jwt.UserAuthUtil;
 import com.spring.cloud.auth.common.util.jwt.IJWTInfo;
+import com.spring.cloud.gateway.feign.AuthServiceFeign;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -30,13 +33,17 @@ import java.util.List;
 public class AccessGatewayFilter implements GlobalFilter {
 
     private static final String GATE_WAY_PREFIX = "/api";
+    @Value("${jwt.refreshMinSecond}")
+    private int refreshMinSecond;
     private final UserAuthConfig userAuthConfig;
     private final UserAuthUtil userAuthUtil;
+    private final AuthServiceFeign authServiceFeign;
 
     @Autowired
-    public AccessGatewayFilter(UserAuthConfig userAuthConfig, UserAuthUtil userAuthUtil) {
+    public AccessGatewayFilter(UserAuthConfig userAuthConfig, UserAuthUtil userAuthUtil, AuthServiceFeign authServiceFeign) {
         this.userAuthConfig = userAuthConfig;
         this.userAuthUtil = userAuthUtil;
+        this.authServiceFeign = authServiceFeign;
     }
 
     @Override
@@ -80,13 +87,23 @@ public class AccessGatewayFilter implements GlobalFilter {
         if (strings != null) {
             authToken = strings.get(0);
         }
-        if (StringUtils.isBlank(authToken)) {
+        if (StringUtils.isEmpty(authToken)) {
             strings = request.getQueryParams().get("token");
             if (strings != null) {
                 authToken = strings.get(0);
             }
         }
+        IJWTInfo ijwtInfo = userAuthUtil.getInfoFromToken(authToken);
+        int exp = ijwtInfo.getExp();
+        if (!StringUtils.isEmpty(exp)) {
+            long differenceMillis = Long.valueOf(exp) * 1000L - DateTime.now().getMillis() ;
+            long refreshMinMillis = Integer.valueOf(refreshMinSecond).longValue() * 1000L;
+            if( 0 < differenceMillis && differenceMillis < refreshMinMillis) {
+                String refreshToken = authServiceFeign.refresh(authToken);
+                authToken = refreshToken;
+            }
+        }
         ctx.header(userAuthConfig.getTokenHeader(), authToken);
-        return userAuthUtil.getInfoFromToken(authToken);
+        return ijwtInfo;
     }
 }

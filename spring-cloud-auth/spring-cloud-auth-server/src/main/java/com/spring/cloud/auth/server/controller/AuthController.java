@@ -28,4 +28,9 @@ public class AuthController {
         final String token = authService.login(authenticationRequest);
         return token;
     }
+
+    @RequestMapping(value = "refresh",method = RequestMethod.POST)
+    public String refresh(String oldToken) throws Exception {
+        return authService.refresh(oldToken);
+    }
 }

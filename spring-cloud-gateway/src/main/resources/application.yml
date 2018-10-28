@@ -131,3 +131,16 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 10000
+
+
+jwt:
+  refreshMinSecond: 86400
+  token-header: Authorization
+  pc:
+    expire: 2592000
+  app:
+    expire: 2592000
+  pri-key:
+    path: jwt/pri.key
+  pub-key:
+    path: jwt/pub.key
