@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
  */
 public class JWTHelper {
     private static RsaKeyHelper rsaKeyHelper = new RsaKeyHelper();
+
     /**
      * 密钥加密token
      *
@@ -64,6 +65,7 @@ public class JWTHelper {
         Jws<Claims> claimsJws = Jwts.parser().setSigningKey(rsaKeyHelper.getPublicKey(pubKeyPath)).parseClaimsJws(token);
         return claimsJws;
     }
+
     /**
      * 公钥解析token
      *
@@ -75,6 +77,7 @@ public class JWTHelper {
         Jws<Claims> claimsJws = Jwts.parser().setSigningKey(rsaKeyHelper.getPublicKey(pubKey)).parseClaimsJws(token);
         return claimsJws;
     }
+
     /**
      * 获取token中的用户信息
      *
@@ -86,8 +89,9 @@ public class JWTHelper {
     public static IJWTInfo getInfoFromToken(String token, String pubKeyPath) throws Exception {
         Jws<Claims> claimsJws = parserToken(token, pubKeyPath);
         Claims body = claimsJws.getBody();
-        return new JWTInfo(body.getSubject(), StringHelper.getObjectValue(body.get(CommonConstants.JWT_KEY_USER_ID)), StringHelper.getObjectValue(body.get(CommonConstants.JWT_KEY_NAME)));
+        return new JWTInfo(body.getSubject(), StringHelper.getObjectValue(body.get(CommonConstants.JWT_KEY_USER_ID)), StringHelper.getObjectValue(body.get(CommonConstants.JWT_KEY_NAME)), Integer.valueOf(StringHelper.getObjectValue(body.get(CommonConstants.JWT_KEY_EXP))));
     }
+
     /**
      * 获取token中的用户信息
      *
@@ -99,6 +103,6 @@ public class JWTHelper {
     public static IJWTInfo getInfoFromToken(String token, byte[] pubKey) throws Exception {
         Jws<Claims> claimsJws = parserToken(token, pubKey);
         Claims body = claimsJws.getBody();
-        return new JWTInfo(body.getSubject(), StringHelper.getObjectValue(body.get(CommonConstants.JWT_KEY_USER_ID)), StringHelper.getObjectValue(body.get(CommonConstants.JWT_KEY_NAME)));
+        return new JWTInfo(body.getSubject(), StringHelper.getObjectValue(body.get(CommonConstants.JWT_KEY_USER_ID)), StringHelper.getObjectValue(body.get(CommonConstants.JWT_KEY_NAME)), Integer.valueOf(StringHelper.getObjectValue(body.get(CommonConstants.JWT_KEY_EXP))));
     }
 }

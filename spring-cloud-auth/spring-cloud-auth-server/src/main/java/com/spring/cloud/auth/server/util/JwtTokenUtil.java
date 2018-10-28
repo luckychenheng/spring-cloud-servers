@@ -16,18 +16,17 @@ public class JwtTokenUtil {
 
     @Value("${jwt.expire}")
     private int expire;
-    @Autowired
-    private KeyConfiguration keyConfiguration;
-
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    @Value("${jwt.pri-key.path}")
+    private String priKeyPath;
+    @Value("${jwt.pub-key.path}")
+    private String pubKeyPath;
 
     public String generateToken(IJWTInfo jwtInfo) throws Exception {
-        return JWTHelper.generateToken(jwtInfo, keyConfiguration.getUserPriKey(),expire);
+        return JWTHelper.generateToken(jwtInfo,priKeyPath,expire);
     }
 
     public IJWTInfo getInfoFromToken(String token) throws Exception {
-        return JWTHelper.getInfoFromToken(token, keyConfiguration.getUserPubKey());
+        return JWTHelper.getInfoFromToken(token, pubKeyPath);
     }
 
 

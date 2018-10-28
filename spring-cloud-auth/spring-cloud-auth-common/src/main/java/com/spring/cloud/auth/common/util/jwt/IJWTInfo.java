@@ -21,4 +21,6 @@ public interface IJWTInfo {
      * @return
      */
     String getName();
+
+    int getExp();
 }

@@ -5,15 +5,17 @@ import java.io.Serializable;
 /**
  * Created by ace on 2017/9/10.
  */
-public class JWTInfo implements Serializable,IJWTInfo {
+public class JWTInfo implements Serializable, IJWTInfo {
     private String username;
     private String userId;
     private String name;
+    private Integer exp;
 
-    public JWTInfo(String username, String userId, String name) {
+    public JWTInfo(String username, String userId, String name, int exp) {
         this.username = username;
         this.userId = userId;
         this.name = name;
+        this.exp = exp;
     }
 
     @Override
@@ -37,6 +39,15 @@ public class JWTInfo implements Serializable,IJWTInfo {
     @Override
     public String getName() {
         return name;
+    }
+
+    public void setExp(int exp) {
+        this.exp = exp;
+    }
+
+    @Override
+    public int getExp() {
+        return exp;
     }
 
     public void setName(String name) {

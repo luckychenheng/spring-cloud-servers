@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="spring-cloud-api" />
+        <module name="spring-cloud-auth-client" />
         <module name="spring-cloud-auth-common" />
         <module name="spring-cloud-auth-server" />
         <module name="spring-cloud-center" />

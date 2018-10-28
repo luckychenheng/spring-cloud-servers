@@ -91,10 +91,18 @@ auth:
   serviceId: spring-cloud-auth
   user:
     token-header: Authorization
+    pub-key:
+      path: jwt/pub.key
   client:
-    token-header: x-client-token
-    id: spring-cloud-gateway  #不填则默认读取spring.application.name
+    token-header: client-token
+    id: spring-cloud-gate  #不填则默认读取spring.application.name
     secret: 123456
+    pub-key:
+      path: client/pub.key
+    ratelimit:
+      resubmit:
+        limit-count: 1
+        refresh-interval: 3000
 
 feign:
   httpclient:

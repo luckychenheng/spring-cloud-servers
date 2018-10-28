@@ -14,6 +14,7 @@
     <modules>
         <module>spring-cloud-auth-server</module>
         <module>spring-cloud-auth-common</module>
+        <module>spring-cloud-auth-client</module>
     </modules>
 
 
