@@ -1,7 +1,7 @@
 package com.spring.cloud.auth.common.util.jwt;
 
-import com.spring.cloud.auth.common.constants.CommonConstants;
-import com.spring.cloud.auth.common.util.StringHelper;
+import com.spring.cloud.api.constants.CommonConstants;
+import com.spring.cloud.api.util.StringHelper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;

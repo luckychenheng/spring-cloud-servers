@@ -1,4 +1,4 @@
-package com.spring.cloud.auth.common.util;
+package com.spring.cloud.api.util;
 
 /**
  * @author wangmj

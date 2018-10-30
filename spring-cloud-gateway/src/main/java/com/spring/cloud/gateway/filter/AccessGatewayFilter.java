@@ -2,9 +2,14 @@ package com.spring.cloud.gateway.filter;
 
 import com.spring.cloud.auth.client.EnableAceAuthClient;
 import com.spring.cloud.auth.client.config.UserAuthConfig;
+import com.spring.cloud.auth.client.exception.JwtIllegalArgumentException;
+import com.spring.cloud.auth.client.exception.JwtSignatureException;
+import com.spring.cloud.auth.client.exception.JwtTokenExpiredException;
 import com.spring.cloud.auth.client.jwt.UserAuthUtil;
 import com.spring.cloud.auth.common.util.jwt.IJWTInfo;
 import com.spring.cloud.gateway.feign.AuthServiceFeign;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +71,13 @@ public class AccessGatewayFilter implements GlobalFilter {
         IJWTInfo user = null;
         try {
             user = getJWTUser(request, mutate);
-        } catch (Exception e) {
+        } catch (ExpiredJwtException ex){
+            log.error("User token expired!");
+        }catch (SignatureException ex){
+            log.error("User token signature error!");
+        }catch (IllegalArgumentException ex){
+            log.error("User token is null or empty!");
+        }catch (Exception e) {
             log.error("用户Token过期异常", e);
             return null;
         }

@@ -1,8 +1,8 @@
-package com.spring.cloud.auth.common.constants;
+package com.spring.cloud.api.constants;
 
 /**
  * @author wangmj
- * @since 2018/10/27
+ * @since 2018/10/30
  */
 public class CommonConstants {
     public final static String RESOURCE_TYPE_MENU = "menu";
