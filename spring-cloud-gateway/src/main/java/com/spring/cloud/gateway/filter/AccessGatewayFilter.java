@@ -1,16 +1,15 @@
 package com.spring.cloud.gateway.filter;
 
+import com.alibaba.fastjson.JSONObject;
+import com.spring.cloud.api.message.BaseResponse;
+import com.spring.cloud.api.message.TokenForbiddenResponse;
 import com.spring.cloud.auth.client.EnableAceAuthClient;
 import com.spring.cloud.auth.client.config.UserAuthConfig;
-import com.spring.cloud.auth.client.exception.JwtIllegalArgumentException;
-import com.spring.cloud.auth.client.exception.JwtSignatureException;
-import com.spring.cloud.auth.client.exception.JwtTokenExpiredException;
 import com.spring.cloud.auth.client.jwt.UserAuthUtil;
 import com.spring.cloud.auth.common.util.jwt.IJWTInfo;
 import com.spring.cloud.gateway.feign.AuthServiceFeign;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,12 +17,16 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -71,18 +74,25 @@ public class AccessGatewayFilter implements GlobalFilter {
         IJWTInfo user = null;
         try {
             user = getJWTUser(request, mutate);
-        } catch (ExpiredJwtException ex){
-            log.error("User token expired!");
-        }catch (SignatureException ex){
-            log.error("User token signature error!");
-        }catch (IllegalArgumentException ex){
-            log.error("User token is null or empty!");
-        }catch (Exception e) {
+        }  catch (Exception e) {
             log.error("用户Token过期异常", e);
-            return null;
+            return getVoidMono(exchange, new TokenForbiddenResponse("用户Token异常"));
         }
         ServerHttpRequest build = mutate.build();
         return chain.filter(exchange.mutate().request(build).build());
+    }
+
+    /**
+     * 网关抛异常
+     *
+     * @param body
+     */
+    @NotNull
+    private Mono<Void> getVoidMono(ServerWebExchange serverWebExchange, BaseResponse body) {
+        serverWebExchange.getResponse().setStatusCode(HttpStatus.OK);
+        byte[] bytes = JSONObject.toJSONString(body).getBytes(StandardCharsets.UTF_8);
+        DataBuffer buffer = serverWebExchange.getResponse().bufferFactory().wrap(bytes);
+        return serverWebExchange.getResponse().writeWith(Flux.just(buffer));
     }
 
     /**
@@ -107,9 +117,9 @@ public class AccessGatewayFilter implements GlobalFilter {
         IJWTInfo ijwtInfo = userAuthUtil.getInfoFromToken(authToken);
         int exp = ijwtInfo.getExp();
         if (!StringUtils.isEmpty(exp)) {
-            long differenceMillis = Long.valueOf(exp) * 1000L - DateTime.now().getMillis() ;
+            long differenceMillis = Long.valueOf(exp) * 1000L - DateTime.now().getMillis();
             long refreshMinMillis = Integer.valueOf(refreshMinSecond).longValue() * 1000L;
-            if( 0 < differenceMillis && differenceMillis < refreshMinMillis) {
+            if (0 < differenceMillis && differenceMillis < refreshMinMillis) {
                 String refreshToken = authServiceFeign.refresh(authToken);
                 authToken = refreshToken;
             }
