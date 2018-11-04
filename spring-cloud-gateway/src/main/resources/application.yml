@@ -58,6 +58,13 @@ spring:
           - Path=/api/auth/**
           filters:
           - StripPrefix=2
+        - id: spring-cloud-moudle-rpc
+          uri: lb://spring-cloud-moudle-rpc
+          order: 8000
+          predicates:
+          - Path=/api/moudle/**
+          filters:
+          - StripPrefix=2
   consul:
     enabled: true
     host: 127.0.0.1
@@ -84,7 +91,7 @@ management:
 
 gate:
   ignore:
-    startWith: /auth/jwt
+    startWith: /moudle/token
 
 
 auth:

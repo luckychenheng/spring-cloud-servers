@@ -12,6 +12,7 @@
         <module name="spring-cloud-auth-server" />
         <module name="spring-cloud-center" />
         <module name="spring-cloud-gateway" />
+        <module name="spring-cloud-moudle-rpc" />
         <module name="spring-cloud-moudle-study" />
       </profile>
     </annotationProcessing>

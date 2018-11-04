@@ -22,7 +22,6 @@ import java.util.List;
  */
 @Configuration
 @Slf4j
-@EnableScheduling
 public class ServiceAuthUtil{
     @Autowired
     private ServiceAuthConfig serviceAuthConfig;

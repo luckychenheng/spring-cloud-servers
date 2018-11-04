@@ -10,6 +10,7 @@
     <file url="file://$PROJECT_DIR$/spring-cloud-center" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-cloud-gateway" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-cloud-moudle" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-cloud-moudle/spring-cloud-moudle-rpc" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-cloud-moudle/spring-cloud-moudle-study" charset="UTF-8" />
   </component>
 </project>

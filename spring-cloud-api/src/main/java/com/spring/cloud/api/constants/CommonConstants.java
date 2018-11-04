@@ -8,6 +8,7 @@ public class CommonConstants {
     public final static String RESOURCE_TYPE_MENU = "menu";
     public final static String RESOURCE_TYPE_BTN = "button";
     public static final Integer EX_TOKEN_ERROR_CODE = 40101;
+    public static final Integer EX_USER_PASS_INVALID_CODE = 40001;
     // 用户token异常
     public static final Integer EX_USER_INVALID_CODE = 40102;
     // 客户端token异常

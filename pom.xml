@@ -13,6 +13,7 @@
         <module>spring-cloud-auth</module>
         <module>spring-cloud-gateway</module>
         <module>spring-cloud-api</module>
+        <module>spring-cloud-moudle</module>
     </modules>
 
     <parent>

@@ -43,6 +43,9 @@ public class AccessGatewayFilter implements GlobalFilter {
     private static final String GATE_WAY_PREFIX = "/api";
     @Value("${jwt.refreshMinSecond}")
     private int refreshMinSecond;
+    @Value("${gate.ignore.startWith}")
+    private String ignoreStartWith;
+
     private final UserAuthConfig userAuthConfig;
     private final UserAuthUtil userAuthUtil;
     private final AuthServiceFeign authServiceFeign;
@@ -69,8 +72,13 @@ public class AccessGatewayFilter implements GlobalFilter {
                 }
             }
         }
+
         final String method = request.getMethod().toString();
         ServerHttpRequest.Builder mutate = request.mutate();
+        if (isStartWith(requestUri)) {
+            ServerHttpRequest build = mutate.build();
+            return chain.filter(exchange.mutate().request(build).build());
+        }
         IJWTInfo user = null;
         try {
             user = getJWTUser(request, mutate);
@@ -93,6 +101,22 @@ public class AccessGatewayFilter implements GlobalFilter {
         byte[] bytes = JSONObject.toJSONString(body).getBytes(StandardCharsets.UTF_8);
         DataBuffer buffer = serverWebExchange.getResponse().bufferFactory().wrap(bytes);
         return serverWebExchange.getResponse().writeWith(Flux.just(buffer));
+    }
+
+    /**
+     * URI是否以什么打头
+     *
+     * @param requestUri
+     * @return
+     */
+    private boolean isStartWith(String requestUri) {
+        boolean flag = false;
+        for (String s : ignoreStartWith.split(",")) {
+            if (requestUri.startsWith(s.trim())) {
+                return true;
+            }
+        }
+        return flag;
     }
 
     /**
