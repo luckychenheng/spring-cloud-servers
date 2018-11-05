@@ -1,4 +1,4 @@
-package com.spring.cloud.moudle.rpc;
+package com.spring.cloud.netty;
 
 import com.spring.cloud.auth.client.EnableAceAuthClient;
 import org.springframework.boot.SpringApplication;
@@ -9,15 +9,15 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * @author wangmj
- * @since 2018/11/3
+ * @since 2018/11/4
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients({"com.spring.cloud.auth.client","com.spring.cloud.auth.service","com.spring.cloud.moudle.rpc"})
+@EnableFeignClients
 @EnableAutoConfiguration
 @EnableAceAuthClient
-public class MoudleRpcApplication {
+public class NettyApplication {
     public static void main(String[] args) {
-        SpringApplication.run(MoudleRpcApplication.class, args);
+        SpringApplication.run(NettyApplication.class, args);
     }
 }

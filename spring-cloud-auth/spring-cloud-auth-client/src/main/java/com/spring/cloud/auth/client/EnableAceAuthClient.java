@@ -1,6 +1,6 @@
 package com.spring.cloud.auth.client;
 
-import com.spring.cloud.auth.client.config.AutoConfiguration;
+import com.spring.cloud.auth.client.configuration.AutoConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

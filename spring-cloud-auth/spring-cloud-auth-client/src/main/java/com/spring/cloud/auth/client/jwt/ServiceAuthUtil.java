@@ -12,19 +12,16 @@ import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-
-import java.util.List;
 
 /**
  * Created by ace on 2017/9/15.
  */
-@Configuration
 @Slf4j
-public class ServiceAuthUtil{
+@Configuration
+public class ServiceAuthUtil {
     @Autowired
     private ServiceAuthConfig serviceAuthConfig;
+
     public IJWTInfo getInfoFromToken(String token) throws Exception {
         try {
             return JWTHelper.getInfoFromToken(token, serviceAuthConfig.getPubKeyPath());

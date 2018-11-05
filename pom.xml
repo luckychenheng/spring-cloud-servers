@@ -14,6 +14,7 @@
         <module>spring-cloud-gateway</module>
         <module>spring-cloud-api</module>
         <module>spring-cloud-moudle</module>
+        <module>spring-cloud-netty</module>
     </modules>
 
     <parent>
