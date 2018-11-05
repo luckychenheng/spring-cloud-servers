@@ -17,7 +17,7 @@ import java.util.Collections;
  * @author ace
  * @date 2017/9/8
  */
-@Configuration("admimWebConfig")
+@Configuration
 @Primary
 public class WebConfiguration implements WebMvcConfigurer {
     @Bean
@@ -27,8 +27,8 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(getServiceAuthRestInterceptor()).
-                addPathPatterns(getIncludePathPatterns()).addPathPatterns("/api/user/validate");
+//        registry.addInterceptor(getServiceAuthRestInterceptor()).
+//                addPathPatterns(getIncludePathPatterns()).addPathPatterns("/**");
         registry.addInterceptor(getUserAuthRestInterceptor()).
                 addPathPatterns(getIncludePathPatterns());
     }
@@ -55,7 +55,9 @@ public class WebConfiguration implements WebMvcConfigurer {
                 "/group/**",
                 "/groupType/**",
                 "/menu/**",
+                "/moudle/token/**",
                 "/api/permissions",
+                "/api/moudle/**",
                 "/api/user/un/**"
         };
         Collections.addAll(list, urls);
