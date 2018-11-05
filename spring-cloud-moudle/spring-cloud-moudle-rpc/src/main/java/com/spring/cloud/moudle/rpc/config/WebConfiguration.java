@@ -1,7 +1,6 @@
 package com.spring.cloud.moudle.rpc.config;
 
 import com.spring.cloud.api.handler.GlobalExceptionHandler;
-import com.spring.cloud.auth.client.interceptor.ServiceAuthRestInterceptor;
 import com.spring.cloud.auth.client.interceptor.UserAuthInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- *
  * @author ace
  * @date 2017/9/8
  */
@@ -27,16 +25,10 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(getServiceAuthRestInterceptor()).
-//                addPathPatterns(getIncludePathPatterns()).addPathPatterns("/**");
         registry.addInterceptor(getUserAuthRestInterceptor()).
-                addPathPatterns(getIncludePathPatterns());
+                addPathPatterns("/**");
     }
 
-    @Bean
-    ServiceAuthRestInterceptor getServiceAuthRestInterceptor() {
-        return new ServiceAuthRestInterceptor();
-    }
 
     @Bean
     UserAuthInterceptor getUserAuthRestInterceptor() {
@@ -45,20 +37,13 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     /**
      * 需要用户和服务认证判断的路径
+     *
      * @return
      */
     private ArrayList<String> getIncludePathPatterns() {
         ArrayList<String> list = new ArrayList<>();
         String[] urls = {
-                "/element/**",
-                "/gateLog/**",
-                "/group/**",
-                "/groupType/**",
-                "/menu/**",
-                "/moudle/token/**",
-                "/api/permissions",
-                "/api/moudle/**",
-                "/api/user/un/**"
+                "/api/moudle/**"
         };
         Collections.addAll(list, urls);
         return list;

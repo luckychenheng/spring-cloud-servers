@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created by ace on 2017/9/8.
  */
-@ControllerAdvice("com.github.wxiaoqi.security")
+@ControllerAdvice("com.spring.cloud")
 @ResponseBody
 public class GlobalExceptionHandler {
     private Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
