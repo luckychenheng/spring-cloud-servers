@@ -14,7 +14,8 @@
         <module name="spring-cloud-gateway" />
         <module name="spring-cloud-moudle-rpc" />
         <module name="spring-cloud-moudle-study" />
-        <module name="spring-cloud-netty" />
+        <module name="spring-cloud-netty-client" />
+        <module name="spring-cloud-netty-server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
