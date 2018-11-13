@@ -15,6 +15,7 @@
         <module name="spring-cloud-moudle-rpc" />
         <module name="spring-cloud-moudle-study" />
         <module name="spring-cloud-netty-client" />
+        <module name="spring-cloud-netty-common" />
         <module name="spring-cloud-netty-server" />
       </profile>
     </annotationProcessing>

@@ -19,6 +19,13 @@ public class ServerMessageHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ByteBuf byteBuf = (ByteBuf) msg;
 
+        int magic = byteBuf.getInt(0);
+        byte version = byteBuf.getByte(4);
+        short cmd = byteBuf.getShort(5);
+        int dataLength = byteBuf.getInt(7);
+        ByteBuf bytes = byteBuf.getBytes(11, new byte[dataLength]);
+
+
         System.out.println(new Date() + ": 服务端读到数据 -> " + byteBuf.toString(Charset.forName("utf-8")));
 
         // 回复数据到客户端

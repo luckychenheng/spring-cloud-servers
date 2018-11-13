@@ -1,5 +1,6 @@
 package com.spring.cloud.netty.server.runner;
 
+import com.spring.cloud.netty.server.handler.AuthHandler;
 import com.spring.cloud.netty.server.handler.ServerMessageHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -49,6 +50,7 @@ public class NettyRunner implements CommandLineRunner {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             socketChannel.pipeline()
+//                                    .addLast(new AuthHandler())
                                     .addLast(new ServerMessageHandler());
                         }
                     });

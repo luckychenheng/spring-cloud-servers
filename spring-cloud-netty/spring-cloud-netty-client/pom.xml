@@ -11,8 +11,16 @@
 
     <artifactId>spring-cloud-netty-client</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.spring.cloud.servers</groupId>
+            <artifactId>spring-cloud-netty-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
     <build>
-        <finalName>spring-cloud-netty-server</finalName>
+        <finalName>spring-cloud-netty-client</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
