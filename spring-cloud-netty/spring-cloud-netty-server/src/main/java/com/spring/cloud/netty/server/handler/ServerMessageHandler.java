@@ -1,10 +1,15 @@
 package com.spring.cloud.netty.server.handler;
 
+import com.spring.cloud.netty.server.interfaces.ICommand;
+import com.spring.cloud.netty.common.constant.Const;
+import com.spring.cloud.netty.common.enums.CmdTypeEnum;
+import com.spring.cloud.netty.server.util.SpringContextUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
-import java.nio.charset.Charset;
 import java.util.Date;
 
 /**
@@ -13,34 +18,39 @@ import java.util.Date;
  * @author wangmj
  * @since 2018/11/6
  */
+@Slf4j
+@Component
 public class ServerMessageHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ByteBuf byteBuf = (ByteBuf) msg;
+        int readerIndex = byteBuf.readerIndex();
 
-        int magic = byteBuf.getInt(0);
-        byte version = byteBuf.getByte(4);
-        short cmd = byteBuf.getShort(5);
-        int dataLength = byteBuf.getInt(7);
-        ByteBuf bytes = byteBuf.getBytes(11, new byte[dataLength]);
+        int magic = byteBuf.readInt();
+        if (magic != Const.MAGIC_DATA) {
+            log.info("不符合数据传输协议,,magic:{}", magic);
+            ctx.channel().close();
+            return;
+        }
+        byte version = byteBuf.readByte();
+        short cmd = byteBuf.readShort();
 
+        CmdTypeEnum typeEnum = CmdTypeEnum.getTypeEnum(cmd);
+        if (typeEnum == null) {
+            log.info("不支持该指令的传输;指令：{}", cmd);
+            return;
+        }
 
-        System.out.println(new Date() + ": 服务端读到数据 -> " + byteBuf.toString(Charset.forName("utf-8")));
+        int dataLength = byteBuf.getInt(readerIndex + 7);
+        ByteBuf bytes = byteBuf.getBytes(readerIndex + 11, new byte[dataLength]);
+        ICommand commandService = (ICommand) SpringContextUtil.getBean(typeEnum.getCmdName());
+        commandService.disposeData(bytes);
+        log.info(new Date() + ": 服务端读到数据 -> ");
 
+        ByteBuf sendBuffer = commandService.getSendBuffer();
         // 回复数据到客户端
-        System.out.println(new Date() + ": 服务端写出数据");
-        ByteBuf out = getByteBuf(ctx);
-        ctx.channel().writeAndFlush(out);
-    }
-
-    private ByteBuf getByteBuf(ChannelHandlerContext ctx) {
-        byte[] bytes = "你好，欢迎关注我的微信公众号，《闪电侠的博客》!".getBytes(Charset.forName("utf-8"));
-
-        ByteBuf buffer = ctx.alloc().buffer();
-
-        buffer.writeBytes(bytes);
-
-        return buffer;
+        log.info(new Date() + ": 服务端写出数据");
+        ctx.channel().writeAndFlush(sendBuffer);
     }
 }

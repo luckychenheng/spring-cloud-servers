@@ -17,4 +17,14 @@ public class LoginInfo {
     private String version;
     private String userId;
 
+    @Override
+    public String toString() {
+        return "LoginInfo{" +
+                "userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", platform='" + platform + '\'' +
+                ", version='" + version + '\'' +
+                ", userId='" + userId + '\'' +
+                '}';
+    }
 }

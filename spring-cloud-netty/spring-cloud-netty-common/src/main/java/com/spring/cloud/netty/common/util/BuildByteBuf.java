@@ -27,7 +27,7 @@ public class BuildByteBuf {
     public static ByteBuf build(byte[] bytes, short cmd) {
         ByteBuf byteBuf = ByteBufAllocator.DEFAULT.buffer(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_CAPACITY);
         byteBuf.writeInt(Const.MAGIC_DATA);//4 魔数
-        byteBuf.writeByte(Const.version);//1 版本
+        byteBuf.writeByte(Const.VERSION);//1 版本
         byteBuf.writeShort(cmd);//2 指令
         byteBuf.writeInt(bytes.length);//4 数据长度
         byteBuf.writeBytes(bytes);

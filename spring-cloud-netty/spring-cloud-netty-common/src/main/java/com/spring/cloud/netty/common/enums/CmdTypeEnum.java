@@ -9,12 +9,19 @@ import com.spring.cloud.netty.common.constant.Const;
  * @since 2018/11/12
  */
 public enum CmdTypeEnum {
-    LOGIN_COMMAND(Const.CONNECT_REQ);
+
+    LOGIN_COMMAND(Const.CONNECT_REQ, "loginCommand");
 
     private short cmdNumber;
+    private String cmdName;
 
-    CmdTypeEnum(short cmdNumber) {
+    CmdTypeEnum(short cmdNumber, String cmdName) {
         this.cmdNumber = cmdNumber;
+        this.cmdName = cmdName;
+    }
+
+    public String getCmdName() {
+        return cmdName;
     }
 
     public short getCmdNumber() {

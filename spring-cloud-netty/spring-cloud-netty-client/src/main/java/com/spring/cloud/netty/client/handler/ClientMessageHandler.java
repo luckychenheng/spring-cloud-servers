@@ -2,6 +2,7 @@ package com.spring.cloud.netty.client.handler;
 
 import com.spring.cloud.netty.common.constant.Const;
 import com.spring.cloud.netty.common.entity.LoginInfo;
+import com.spring.cloud.netty.common.enums.CmdTypeEnum;
 import com.spring.cloud.netty.common.protocol.SerializationUtil;
 import com.spring.cloud.netty.common.util.BuildByteBuf;
 import io.netty.buffer.ByteBuf;
@@ -42,6 +43,10 @@ public class ClientMessageHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ByteBuf byteBuf = (ByteBuf) msg;
-        System.out.println(new Date() + ": 客户端读到数据 -> " + byteBuf.toString(Charset.forName("utf-8")));
+        int magicData = byteBuf.readInt();
+        byte version = byteBuf.readByte();
+        short cmd = byteBuf.readShort();
+        byte result = byteBuf.readByte();
+        log.info(new Date() + ": 客户端读到数据,{}",CmdTypeEnum.getTypeEnum(cmd).getCmdName());
     }
 }
