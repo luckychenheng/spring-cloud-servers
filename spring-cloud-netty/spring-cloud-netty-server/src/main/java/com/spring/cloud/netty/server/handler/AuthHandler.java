@@ -1,6 +1,7 @@
 package com.spring.cloud.netty.server.handler;
 
 import com.spring.cloud.netty.common.util.LoginUtil;
+import com.spring.cloud.netty.server.cache.ServerConnectionMap;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -11,12 +12,12 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 public class AuthHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (!LoginUtil.hasLogin(ctx.channel())) {
-            ctx.channel().close();
-        } else {
+        if ("isLogin".equals(ServerConnectionMap.getLoginState("login"))) {
             // 一行代码实现逻辑的删除
             ctx.pipeline().remove(this);
             super.channelRead(ctx, msg);
+        } else {
+            ctx.channel().close();
         }
     }
 

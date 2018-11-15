@@ -1,10 +1,12 @@
 package com.spring.cloud.netty.server.command;
 
+import com.spring.cloud.netty.server.cache.ServerConnectionMap;
 import com.spring.cloud.netty.server.interfaces.CommandAdapter;
 import com.spring.cloud.netty.common.constant.Const;
 import com.spring.cloud.netty.common.entity.LoginInfo;
 import com.spring.cloud.netty.common.protocol.SerializationUtil;
 import io.netty.buffer.ByteBuf;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
  * @since 2018/11/13
  */
 @Component
+@Slf4j
 public class LoginCommand extends CommandAdapter {
 
     private LoginInfo loginInfo;
@@ -26,7 +29,8 @@ public class LoginCommand extends CommandAdapter {
         byte[] data = new byte[dataLength];
         buffer.readBytes(data);
         loginInfo = SerializationUtil.deserialize(data, LoginInfo.class);
-        System.out.println(loginInfo.toString());
+        log.info(loginInfo.toString());
+        ServerConnectionMap.setLoginState("isLogin");
         result = 0x00;
         return true;
     }

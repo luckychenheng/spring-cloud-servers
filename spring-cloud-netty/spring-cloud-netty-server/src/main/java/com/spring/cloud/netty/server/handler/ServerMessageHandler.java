@@ -24,9 +24,8 @@ public class ServerMessageHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        ByteBuf byteBuf = (ByteBuf) msg;
-        int readerIndex = byteBuf.readerIndex();
 
+        ByteBuf byteBuf = (ByteBuf) msg;
         int magic = byteBuf.readInt();
         if (magic != Const.MAGIC_DATA) {
             log.info("不符合数据传输协议,,magic:{}", magic);
@@ -42,10 +41,12 @@ public class ServerMessageHandler extends ChannelInboundHandlerAdapter {
             return;
         }
 
-        int dataLength = byteBuf.getInt(readerIndex + 7);
-        ByteBuf bytes = byteBuf.getBytes(readerIndex + 11, new byte[dataLength]);
         ICommand commandService = (ICommand) SpringContextUtil.getBean(typeEnum.getCmdName());
-        commandService.disposeData(bytes);
+        if (commandService == null) {
+            log.info("不支持该指令的传输;指令：{}", cmd);
+            return;
+        }
+        commandService.disposeData(byteBuf);
         log.info(new Date() + ": 服务端读到数据 -> ");
 
         ByteBuf sendBuffer = commandService.getSendBuffer();

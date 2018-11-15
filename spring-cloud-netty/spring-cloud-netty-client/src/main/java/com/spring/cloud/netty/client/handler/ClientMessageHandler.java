@@ -2,6 +2,7 @@ package com.spring.cloud.netty.client.handler;
 
 import com.spring.cloud.netty.common.constant.Const;
 import com.spring.cloud.netty.common.entity.LoginInfo;
+import com.spring.cloud.netty.common.entity.SendDataInfo;
 import com.spring.cloud.netty.common.enums.CmdTypeEnum;
 import com.spring.cloud.netty.common.protocol.SerializationUtil;
 import com.spring.cloud.netty.common.util.BuildByteBuf;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -20,6 +22,8 @@ import java.util.UUID;
  */
 @Slf4j
 public class ClientMessageHandler extends ChannelInboundHandlerAdapter {
+
+    boolean _verify = false;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
@@ -41,12 +45,29 @@ public class ClientMessageHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws InterruptedException {
         ByteBuf byteBuf = (ByteBuf) msg;
         int magicData = byteBuf.readInt();
         byte version = byteBuf.readByte();
         short cmd = byteBuf.readShort();
         byte result = byteBuf.readByte();
-        log.info(new Date() + ": 客户端读到数据,{}",CmdTypeEnum.getTypeEnum(cmd).getCmdName());
+        log.info(new Date() + ": 客户端读到数据,{}", CmdTypeEnum.getTypeEnum(cmd).getCmdName());
+        _verify = true;
+        if (_verify) {
+            sendMessage(ctx);
+            Thread.sleep(100);
+        }
+
+    }
+
+    private void sendMessage(ChannelHandlerContext ctx) {
+        SendDataInfo sendDataInfo = new SendDataInfo();
+        sendDataInfo.setCreatedDate(new Date());
+        sendDataInfo.setUserName("Tom");
+        Random rand = new Random();
+        sendDataInfo.setContent("Hello, I am Tom!" + rand.nextInt(100));
+        byte[] serialize = SerializationUtil.serialize(sendDataInfo);
+        ByteBuf data = BuildByteBuf.build(serialize, Const.SEND_DATA);
+        ctx.writeAndFlush(data);
     }
 }

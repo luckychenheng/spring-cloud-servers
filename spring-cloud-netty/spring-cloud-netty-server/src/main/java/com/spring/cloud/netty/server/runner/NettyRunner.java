@@ -10,6 +10,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -50,8 +51,9 @@ public class NettyRunner implements CommandLineRunner {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             socketChannel.pipeline()
-//                                    .addLast(new AuthHandler())
-                                    .addLast(new ServerMessageHandler());
+                                    .addLast(new ServerMessageHandler())
+                                    .addLast(new AuthHandler());
+//                                    .addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
                         }
                     });
             ChannelFuture channelFuture = bootstrap.bind(9999).sync();

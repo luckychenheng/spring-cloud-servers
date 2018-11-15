@@ -38,15 +38,23 @@ public class NettyClientRunner implements CommandLineRunner {
                         ch.pipeline().addLast(new ClientMessageHandler());
                     }
                 });
-        bootstrap.connect(HOST, PORT)
+        // Start the client.
+        for (int i = 1; i <= 1; i++) {
+            startConnection(bootstrap, i);
+        }
+    }
+
+    private static void startConnection(Bootstrap b, int index) {
+        b.connect(HOST, PORT)
                 .addListener(new ChannelFutureListener() {
                     @Override
                     public void operationComplete(ChannelFuture future)
                             throws Exception {
                         if (future.isSuccess()) {
-                            log.info("Client[{}] connected Successed...");
+                            //init registry
+                            log.info("Client[{}] connected Gate Successed...", index);
                         } else {
-                            log.error("Client[{}] connected Failed");
+                            log.error("Client[{}] connected Gate Failed", index);
                         }
                     }
                 });

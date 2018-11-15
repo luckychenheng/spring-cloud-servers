@@ -10,7 +10,9 @@ import com.spring.cloud.netty.common.constant.Const;
  */
 public enum CmdTypeEnum {
 
-    LOGIN_COMMAND(Const.CONNECT_REQ, "loginCommand");
+    LOGIN_COMMAND(Const.CONNECT_REQ, "loginCommand"),
+    DISPOSE_DATA_COMMAND(Const.SEND_DATA, "disposeDataCommand"),
+    LOGIN_RESPONSE(Const.CONNECT_RESP, "loginResponseCommand");
 
     private short cmdNumber;
     private String cmdName;
