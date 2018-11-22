@@ -1,6 +1,7 @@
 package com.spring.cloud.netty.server.interfaces;
 
-import com.spring.cloud.netty.common.constant.Const;
+import com.spring.cloud.netty.common.constant.MessageDataConstant;
+import com.spring.cloud.netty.common.util.BuildByteBuf;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import org.springframework.stereotype.Component;
@@ -18,19 +19,18 @@ public abstract class CommandAdapter implements ICommand {
     private byte version;
 
     public CommandAdapter() {
-        magicData = Const.MAGIC_DATA;
-        version = Const.VERSION;
+        magicData = MessageDataConstant.MAGIC_DATA;
+        version = MessageDataConstant.VERSION;
     }
 
     private int getCmdHeadSize() {
-        return 4 + 1 + 2;
+        return 1 + 4 + 1 + 2 + 4 + 1;
     }
 
     private void setFiled() {
-        this.magicData = Const.MAGIC_DATA;
-        this.version = Const.VERSION;
+        this.magicData = MessageDataConstant.MAGIC_DATA;
+        this.version = MessageDataConstant.VERSION;
     }
-
 
 
     @Override
@@ -42,6 +42,7 @@ public abstract class CommandAdapter implements ICommand {
     }
 
     private boolean fillChannelBuffer(ByteBuf byteBuf) {
+        byteBuf.writeByte(MessageDataConstant.CMD_HEAD);
         byteBuf.writeInt(this.magicData);
         byteBuf.writeByte(this.version);
         byteBuf.writeShort(getCmd());

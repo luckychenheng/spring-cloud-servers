@@ -1,5 +1,6 @@
 package com.spring.cloud.netty.server.command;
 
+import com.spring.cloud.netty.common.constant.MessageDataConstant;
 import com.spring.cloud.netty.server.cache.ServerConnectionMap;
 import com.spring.cloud.netty.server.interfaces.CommandAdapter;
 import com.spring.cloud.netty.common.constant.Const;
@@ -31,13 +32,15 @@ public class LoginCommand extends CommandAdapter {
         loginInfo = SerializationUtil.deserialize(data, LoginInfo.class);
         log.info(loginInfo.toString());
         ServerConnectionMap.setLoginState("isLogin");
-        result = 0x00;
+        result = MessageDataConstant.SUCCESS_CODE;
         return true;
     }
 
     @Override
     public void fillCmdBody(ByteBuf byteBuf) {
+        byteBuf.writeInt(1);
         byteBuf.writeByte(result);
+        byteBuf.writeByte(MessageDataConstant.CMD_END);
     }
 
     @Override

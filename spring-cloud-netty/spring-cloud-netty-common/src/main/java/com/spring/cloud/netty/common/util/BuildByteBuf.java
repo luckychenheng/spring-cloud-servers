@@ -1,6 +1,6 @@
 package com.spring.cloud.netty.common.util;
 
-import com.spring.cloud.netty.common.constant.Const;
+import com.spring.cloud.netty.common.constant.MessageDataConstant;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
@@ -18,7 +18,6 @@ public class BuildByteBuf {
 
     /**
      * 构造传输byteBuf
-     * todo：初始化容量及最大容量优化
      *
      * @param bytes 数据
      * @param cmd   指令
@@ -26,11 +25,13 @@ public class BuildByteBuf {
      */
     public static ByteBuf build(byte[] bytes, short cmd) {
         ByteBuf byteBuf = ByteBufAllocator.DEFAULT.buffer(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_CAPACITY);
-        byteBuf.writeInt(Const.MAGIC_DATA);//4 魔数
-        byteBuf.writeByte(Const.VERSION);//1 版本
+        byteBuf.writeByte(MessageDataConstant.CMD_HEAD);//1头指令
+        byteBuf.writeInt(MessageDataConstant.MAGIC_DATA);//4 魔数
+        byteBuf.writeByte(MessageDataConstant.VERSION);//1 版本
         byteBuf.writeShort(cmd);//2 指令
         byteBuf.writeInt(bytes.length);//4 数据长度
-        byteBuf.writeBytes(bytes);
+        byteBuf.writeBytes(bytes);//数据
+        byteBuf.writeByte(MessageDataConstant.CMD_END);//尾标识
         return byteBuf;
     }
 }

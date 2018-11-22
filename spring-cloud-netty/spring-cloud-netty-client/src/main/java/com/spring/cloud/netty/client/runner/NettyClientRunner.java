@@ -1,5 +1,7 @@
 package com.spring.cloud.netty.client.runner;
 
+import com.spring.cloud.netty.client.decode.ClientMessageDecode;
+import com.spring.cloud.netty.client.handler.ClientHeartBeatHandler;
 import com.spring.cloud.netty.client.handler.ClientMessageHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -35,7 +37,10 @@ public class NettyClientRunner implements CommandLineRunner {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     public void initChannel(SocketChannel ch) {
-                        ch.pipeline().addLast(new ClientMessageHandler());
+                        ch.pipeline()
+                                .addLast(new ClientMessageDecode())
+                                .addLast(new ClientMessageHandler())
+                                .addLast(new ClientHeartBeatHandler());
                     }
                 });
         // Start the client.

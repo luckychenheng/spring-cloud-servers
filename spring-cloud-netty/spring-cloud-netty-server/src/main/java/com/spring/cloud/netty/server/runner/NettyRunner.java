@@ -1,5 +1,6 @@
 package com.spring.cloud.netty.server.runner;
 
+import com.spring.cloud.netty.server.decode.ServerMessageDecode;
 import com.spring.cloud.netty.server.handler.AuthHandler;
 import com.spring.cloud.netty.server.handler.ServerMessageHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -11,6 +12,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.string.StringDecoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -51,9 +53,9 @@ public class NettyRunner implements CommandLineRunner {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             socketChannel.pipeline()
-                                    .addLast(new ServerMessageHandler())
-                                    .addLast(new AuthHandler());
-//                                    .addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
+                                    .addLast(new ServerMessageDecode())
+                                    .addLast(new ServerMessageHandler());
+//                                    .addLast(new AuthHandler());
                         }
                     });
             ChannelFuture channelFuture = bootstrap.bind(9999).sync();
