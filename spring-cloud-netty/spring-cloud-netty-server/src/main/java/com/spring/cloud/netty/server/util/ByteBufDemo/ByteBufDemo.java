@@ -1,4 +1,4 @@
-package com.spring.cloud.moudle.study.demo.ByteBufDemo;
+package com.spring.cloud.netty.server.util.ByteBufDemo;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
