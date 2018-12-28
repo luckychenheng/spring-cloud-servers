@@ -1,4 +1,4 @@
-package com.spring.cloud.netty.server.demo.decodeDemo;
+package com.spring.cloud.moudle.study.demo.decodeDemo;
 
 import lombok.Data;
 
