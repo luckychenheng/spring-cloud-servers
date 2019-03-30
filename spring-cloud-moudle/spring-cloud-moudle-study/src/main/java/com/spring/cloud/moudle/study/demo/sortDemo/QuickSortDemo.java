@@ -12,5 +12,4 @@ public class QuickSortDemo {
 //        int p = getParditionIndex();
     }
 
-    private static void quick
 }
